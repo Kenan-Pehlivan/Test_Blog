@@ -3,34 +3,24 @@
 -->
 
 <?php
-// Docker-compatible database connection
-// Check if running in Docker environment
-$isDocker = getenv('DB_HOST') !== false;
 
-if ($isDocker) {
-    // Docker environment
-    $servername = getenv('DB_HOST') ?: 'db';
-    $username = getenv('DB_USER') ?: 'blog_user';
-    $password = getenv('DB_PASSWORD') ?: 'blog_password_2024';
-    $dbname = getenv('DB_NAME') ?: 'blog_db';
-} else {
-    // Local XAMPP environment  
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "blog_db";
-}
+$host = 'db';
+$user = 'root';
+$pass = '';
+$db_name = 'blog';
 
-try {
-    $conn = new mysqli($servername, $username, $password, $dbname);
-    
-    // Set charset to handle special characters properly
-    $conn->set_charset("utf8mb4");
-    
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
+// Verbindung mit der DB mit den gegebenen Parametern weiterer potenzieller Ansatz: $conn = new MYSQLi(...)
+
+$conn = mysqli_connect($host, $user, $pass, $db_name);
+
+// Passwort auf der DB nicht gesetzt. Daher wird keine Fehlermeldung ausgeworfen. Passwort muss noch in der DB gesetzt werden
+if ($conn->connect_error) {
+    die('Database connection error: '. $conn->connect_error);
+} 
+
+/*  Testung der Verbindung
+
+    else {
+    echo "DB connection sucessful";
     }
-} catch(Exception $e) {
-    die("Connection failed: " . $e->getMessage());
-}
-?>
+*/
